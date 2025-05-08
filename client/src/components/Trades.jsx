@@ -145,7 +145,28 @@ function Trades({ teamId, showModal, setShowModal, leagueId }) {
             alert("Failed to create trade.");
         }
     };
-    const isBalancedTrade = offeringPlayerIds.length === requestedPlayerIds.length && offeringPlayerIds.length > 0;
+    const isBalancedTrade = (() => {
+        if (
+          offeringPlayerIds.length !== requestedPlayerIds.length ||
+          offeringPlayerIds.length === 0
+        ) return false;
+      
+        const getPositions = (ids, playersList) => {
+          return ids
+            .map(id => {
+              const player = playersList.find(p => p.id === id);
+              return player?.position;
+            })
+            .filter(Boolean)
+            .sort();
+        };
+      
+        const offeringPositions = getPositions(offeringPlayerIds, myTeamPlayers);
+        const requestedPositions = getPositions(requestedPlayerIds, receivingTeamPlayers);
+      
+        return JSON.stringify(offeringPositions) === JSON.stringify(requestedPositions);
+      })();
+      
 
     const acceptTrade = async (tradeId) => {
         if (!window.confirm("Are you sure you want to accept this trade?")) return;
@@ -198,7 +219,6 @@ function Trades({ teamId, showModal, setShowModal, leagueId }) {
 
                         <h3 className="text-lg font-bold mb-4">Create Trade</h3>
 
-                        {/* Receiving Team Dropdown */}
                         <div>
                             <label className="block mb-1 font-semibold">Receiving Team</label>
                             <select
@@ -251,7 +271,7 @@ function Trades({ teamId, showModal, setShowModal, leagueId }) {
                                                 }
                                             }}
                                         />
-                                        <span>{player.firstName} {player.lastName}</span>
+                                        <span>{player.firstName} {player.lastName} ({player.position})</span>
                                     </label>
                                 ))}
                             </div>
@@ -275,7 +295,7 @@ function Trades({ teamId, showModal, setShowModal, leagueId }) {
                                                 }
                                             }}
                                         />
-                                        <span>{player.firstName} {player.lastName}</span>
+                                        <span>{player.firstName} {player.lastName} ({player.position})</span>
                                     </label>
                                 ))}
                             </div>
@@ -318,8 +338,6 @@ function Trades({ teamId, showModal, setShowModal, leagueId }) {
                             </td>
                             <td className="px-4 py-2">{teams[trade.offeringTeamId] ?? trade.offeringTeamId}</td>
                             <td className="px-4 py-2">{teams[trade.receivingTeamId] ?? trade.receivingTeamId}</td>
-
-                            {/* Offered Players */}
                             <td className="px-4 py-2">
                                 {trade.offeringPlayerIds.map((id) => {
                                     if (players[id]) {
@@ -334,8 +352,6 @@ function Trades({ teamId, showModal, setShowModal, leagueId }) {
                                     }
                                 }).join(", ")}
                             </td>
-
-                            {/* Requested Players */}
                             <td className="px-4 py-2">
                                 {trade.receivingPlayerIds.map((id) => {
                                     if (players[id]) {

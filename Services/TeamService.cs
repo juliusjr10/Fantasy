@@ -225,10 +225,11 @@ namespace FantasyBasketball.Services
             var playerIn = await _context.Players.FindAsync(dto.PlayerInId);
             if (playerIn == null)
                 return (false, "Free agent not found", null);
-
-            if (await _context.TeamPlayers.AnyAsync(tp => tp.PlayerId == dto.PlayerInId && tp.Team.LeagueId == team.LeagueId))
-                return (false, "This player is already taken in the league", null);
-
+            if (team.LeagueId != 9999)
+            {
+                if (await _context.TeamPlayers.AnyAsync(tp => tp.PlayerId == dto.PlayerInId && tp.Team.LeagueId == team.LeagueId))
+                    return (false, "This player is already taken in the league", null);
+            }
             if (team.LeagueId == 9999)
             {
                 var playerOutEntity = await _context.Players.FindAsync(dto.PlayerOutId);

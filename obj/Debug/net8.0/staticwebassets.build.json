@@ -1,11 +1,12 @@
 {
   "Version": 1,
-  "Hash": "zinVX4YXCjkRjepbMwyqf74yFzn7xPiQxC3RzSDoJR0=",
+  "Hash": "EBXbv9ErvIBn/hxjIPlimI5QKMIlHeD0niOP/kYWU2Q=",
   "Source": "FantasyBasketball",
   "BasePath": "_content/FantasyBasketball",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
-  "Assets": []
+  "Assets": [],
+  "Endpoints": []
 }

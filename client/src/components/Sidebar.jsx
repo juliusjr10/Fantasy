@@ -19,7 +19,6 @@ const navItems = [
   { label: "Stats", path: "/stats", icon: <ChartBarIcon className="h-5 w-5" /> },
   { label: "Games", path: "/games", icon: <CalendarIcon className="h-5 w-5" /> },
   { label: "Questions", path: "/questions", icon: <QuestionMarkCircleIcon className="h-5 w-5" /> },
-  { label: "Rules", path: "/rules", icon: <ClipboardListIcon className="h-5 w-5" /> },
 ];
 
 

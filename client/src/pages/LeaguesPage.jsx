@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { jwtDecode } from "jwt-decode";
-
+import EyeIcon from "../icons/EyeIcon";
+import EyeCloseIcon from "../icons/EyeCloseIcon";
 Modal.setAppElement("#root");
 
 function LeaguesPage() {
@@ -15,9 +16,11 @@ function LeaguesPage() {
     const [centerLimit, setCenterLimit] = useState(2);
     const [limitPreset, setLimitPreset] = useState("5-5-2");
     const [leagueTeams, setLeagueTeams] = useState({});
-
+    const [revealedPasswords, setRevealedPasswords] = useState({});
+    const [visibility, setVisibility] = useState("public");
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
         fetchLeagues();
@@ -54,6 +57,7 @@ function LeaguesPage() {
                 break;
         }
     }, [limitPreset]);
+
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
@@ -62,6 +66,7 @@ function LeaguesPage() {
             setCurrentUserId(id);
         }
     }, []);
+
     const fetchLeagues = async () => {
         try {
             const res = await fetch("https://localhost:7119/api/league/all");
@@ -89,6 +94,7 @@ function LeaguesPage() {
             console.error(`Error loading teams for league ${leagueId}:`, err);
         }
     };
+
     const handleDeleteLeague = async (leagueId) => {
         if (!window.confirm("Are you sure you want to delete this league?")) return;
 
@@ -103,7 +109,7 @@ function LeaguesPage() {
             if (!res.ok) throw new Error(await res.text());
 
             alert("League deleted successfully.");
-            fetchLeagues(); // Refresh leagues
+            fetchLeagues();
         } catch (err) {
             alert("Failed to delete league: " + err.message);
         }
@@ -134,7 +140,7 @@ function LeaguesPage() {
                     password,
                     description: "",
                     draftDateTime: new Date().toISOString(),
-                    visibility: "public",
+                    visibility,
                     commissionerId,
                     guardLimit,
                     forwardLimit,
@@ -190,8 +196,37 @@ function LeaguesPage() {
                                     )}
                                 </div>
 
-                                <p className="text-sm text-gray-400">Created by: {league.commissioner?.username || "Unknown"}</p>
-                                <p className="text-xs text-gray-400 mt-1">Drafted: {league.drafted ? "Yes" : "No"}</p>
+                                <p className="text-sm text-gray-400">
+                                    Visibility: <span className="font-semibold">{league.visibility}</span>
+                                </p>
+
+                                {league.visibility === "public" && league.password && (
+                                    <>
+                                        {revealedPasswords[league.id] ? (
+                                            <p className="text-green-400 text-sm mt-1">
+                                                Password: {league.password}
+                                            </p>
+                                        ) : (
+                                            <button
+                                                onClick={() =>
+                                                    setRevealedPasswords((prev) => ({ ...prev, [league.id]: true }))
+                                                }
+                                                className="text-blue-400 hover:text-blue-600 text-sm mt-1 underline"
+                                            >
+                                                Reveal the password
+                                            </button>
+                                        )}
+                                    </>
+                                )}
+
+                                <p className="text-sm text-gray-400 mt-1">
+                                    Created by: {league.commissioner?.username || "Unknown"}
+                                </p>
+
+                                <p className="text-sm text-gray-400 mt-1">
+                                    Drafted: {league.drafted ? "Yes" : "No"}
+                                </p>
+
                                 <div className="mt-3">
                                     <p className="text-sm font-semibold text-white">Teams:</p>
                                     <ul className="list-disc list-inside text-sm text-gray-300">
@@ -204,10 +239,8 @@ function LeaguesPage() {
                                         )}
                                     </ul>
                                 </div>
-
                             </div>
                         ))
-
                 )}
             </div>
 
@@ -237,14 +270,41 @@ function LeaguesPage() {
                         className="w-full px-4 py-2 rounded bg-gray-700 text-white"
                     />
 
-                    <input
-                        type="text"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        className="w-full px-4 py-2 rounded bg-gray-700 text-white"
-                    />
+                    <div>
+                        <label className="block text-sm mb-1">Password</label>
+                        <div className="relative">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                placeholder="••••••••"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                className="w-full px-4 py-2 pr-10 rounded bg-gray-700 text-white"
+                            />
+                            <span
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+                            >
+                                {showPassword ? (
+                                    <EyeIcon className="w-5 h-5 text-gray-400" />
+                                ) : (
+                                    <EyeCloseIcon className="w-5 h-5 text-gray-400" />
+                                )}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm mb-1">Visibility</label>
+                        <select
+                            value={visibility}
+                            onChange={(e) => setVisibility(e.target.value)}
+                            className="w-full px-4 py-2 rounded bg-gray-700 text-white"
+                        >
+                            <option value="public">Public</option>
+                            <option value="private">Private</option>
+                        </select>
+                    </div>
 
                     <div>
                         <label className="block text-sm mb-1">Position Limit Preset</label>
@@ -298,7 +358,6 @@ function LeaguesPage() {
                     </button>
                 </form>
             </Modal>
-
         </div>
     );
 }

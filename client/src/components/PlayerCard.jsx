@@ -26,8 +26,8 @@ function PlayerCard({ player, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
-      <div className="bg-white rounded-2xl p-6 w-[95%] max-w-md relative shadow-xl text-black">
-        <button className="absolute top-4 right-4 text-2xl" onClick={onClose}>
+      <div className="bg-white rounded-xl p-3 w-[90%] max-w-sm relative shadow-lg text-black text-sm">
+        <button className="absolute top-3 right-3 text-lg" onClick={onClose}>
           ✕
         </button>
 
@@ -35,29 +35,29 @@ function PlayerCard({ player, onClose }) {
           <img
             src={imagePath}
             alt={`${player.firstName} ${player.lastName}`}
-            className="w-28 h-28 rounded-full object-cover mb-4 border-4 border-gray-200"
+            className="w-16 h-16 rounded-full object-cover mb-2 border-2 border-gray-200"
           />
-          <h2 className="text-xl font-bold text-center">
+          <h2 className="text-base font-semibold text-center">
             {player.firstName} <span className="uppercase">{player.lastName}</span>
           </h2>
-          <p className="text-gray-600 text-sm">{player.team} • {player.position}</p>
+          <p className="text-gray-500 text-xs">{player.team} • {player.position}</p>
 
           {loading ? (
-            <p className="mt-4 text-sm text-gray-500">Loading stats...</p>
+            <p className="mt-3 text-xs text-gray-500">Loading stats...</p>
           ) : (
-            <div className="mt-4 flex justify-around w-full text-center">
+            <div className="mt-3 flex justify-center w-full text-center">
               <div>
-                <div className="text-lg font-bold">
+                <div className="text-lg font-semibold">
                   {averages?.fantasyPoints?.toFixed(1) ?? "—"}
                 </div>
-                <div className="text-sm text-gray-500">FPTS avg.</div>
+                <div className="text-xs text-gray-500">FPTS avg.</div>
               </div>
             </div>
           )}
         </div>
 
         {!loading && averages && (
-          <div className="mt-6 border-t border-gray-300 pt-4">
+          <div className="mt-4 border-t border-gray-200 pt-3 space-y-1">
             <StatRow label="Fantasy Points" value={averages.fantasyPoints?.toFixed(1) ?? "—"} />
             <StatRow label="Points" value={averages.points?.toFixed(1) ?? "—"} />
             <StatRow label="Rebounds" value={averages.rebounds?.toFixed(1) ?? "—"} />
@@ -78,7 +78,7 @@ function PlayerCard({ player, onClose }) {
 
 function StatRow({ label, value }) {
   return (
-    <div className="flex justify-between py-1 text-sm text-gray-700">
+    <div className="flex justify-between text-xs text-gray-700">
       <span>{label}</span>
       <span className="font-medium text-black">{value}</span>
     </div>

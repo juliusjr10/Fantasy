@@ -243,6 +243,7 @@ namespace FantasyBasketball.Services
                 l.ForwardLimit,
                 l.CenterLimit,
                 l.Drafted,
+                l.Password,
                 Commissioner = new
                 {
                     l.Commissioner.Id,

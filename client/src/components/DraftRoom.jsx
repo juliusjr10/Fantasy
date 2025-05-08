@@ -16,6 +16,11 @@ function DraftRoom({ leagueId, teams }) {
   const [draftHistory, setDraftHistory] = useState([]);
   const [searchPlayerTerm, setSearchPlayerTerm] = useState("");
   const [positionLimits, setPositionLimits] = useState({ G: 5, F: 5, C: 2 });
+  const [positionFilters, setPositionFilters] = useState({
+    G: true,
+    F: true,
+    C: true,
+  });
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -278,13 +283,13 @@ function DraftRoom({ leagueId, teams }) {
     };
   }, [leagueId]);
 
-  const availablePlayers = allPlayers.filter(
-    (p) => {
-      const notPicked = !playersPicked.some((pick) => pick.playerId === p.id);
-      const nameMatch = `${p.firstName} ${p.lastName}`.toLowerCase().includes(searchPlayerTerm.toLowerCase());
-      return notPicked && nameMatch;
-    }
-  );
+  const availablePlayers = allPlayers.filter((p) => {
+    const notPicked = !playersPicked.some((pick) => pick.playerId === p.id);
+    const nameMatch = `${p.firstName} ${p.lastName}`.toLowerCase().includes(searchPlayerTerm.toLowerCase());
+    const positionMatch = positionFilters[p.position];
+    return notPicked && nameMatch && positionMatch;
+  });
+  
 
 
   return (
@@ -378,6 +383,25 @@ function DraftRoom({ leagueId, teams }) {
           </div>
           {!draftEnded && (
             <div className="mb-4">
+              <div className="flex items-center space-x-4 mb-4">
+                {["G", "F", "C"].map((pos) => (
+                  <label key={pos} className="inline-flex items-center space-x-1 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={positionFilters[pos]}
+                      onChange={() =>
+                        setPositionFilters((prev) => ({
+                          ...prev,
+                          [pos]: !prev[pos],
+                        }))
+                      }
+                      className="form-checkbox h-4 w-4 text-violet-600"
+                    />
+                    <span>{pos}</span>
+                  </label>
+                ))}
+              </div>
+
               <input
                 type="text"
                 value={searchPlayerTerm}
