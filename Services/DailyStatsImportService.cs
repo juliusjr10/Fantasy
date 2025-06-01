@@ -1,4 +1,4 @@
-﻿/*using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
@@ -33,20 +33,39 @@ namespace FantasyBasketball.Services
         {
             while (!stoppingToken.IsCancellationRequested)
             {
+                var now = DateTime.Now;
+                var nextRunTime = DateTime.Today.AddHours(10);
+
+                if (now > nextRunTime)
+                {
+                    nextRunTime = nextRunTime.AddDays(1);
+                }
+
+                var delay = nextRunTime - now;
+
+                Console.WriteLine($"Waiting until {nextRunTime} to run daily import...");
+
                 try
                 {
-                    Console.WriteLine($"{DateTime.UtcNow}] Starting ImportDailyPlayerStatsAsync...");
-                    await ImportDailyPlayerStatsAsync(stoppingToken);
-                    Console.WriteLine($"{DateTime.UtcNow}] Finished ImportDailyPlayerStatsAsync.");
+                    await Task.Delay(delay, stoppingToken);
+
+                    if (!stoppingToken.IsCancellationRequested)
+                    {
+                        Console.WriteLine($"Running import at: {DateTime.Now}");
+                        await ImportDailyPlayerStatsAsync(stoppingToken);
+                    }
+                }
+                catch (TaskCanceledException)
+                {
+
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"An exception occurred during import: {ex.Message}");
+                    Console.WriteLine($"An error occurred in ExecuteAsync: {ex.Message}");
                 }
-
-                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
             }
         }
+
 
         private async Task ImportDailyPlayerStatsAsync(CancellationToken stoppingToken)
         {
@@ -196,4 +215,4 @@ namespace FantasyBasketball.Services
             }
         }
     }
-}*/
+}

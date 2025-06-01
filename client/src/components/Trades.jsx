@@ -205,8 +205,6 @@ function Trades({ teamId, showModal, setShowModal, leagueId }) {
 
     return (
         <div className="relative overflow-auto rounded-lg border border-slate-300">
-
-            {/* Modal */}
             {showModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                     <div className="bg-white p-6 rounded-lg w-full max-w-md shadow-lg space-y-4 relative">
@@ -277,8 +275,6 @@ function Trades({ teamId, showModal, setShowModal, leagueId }) {
                             </div>
 
                         </div>
-
-                        {/* Requested Players Checkboxes */}
                         <div>
                             <label className="block mb-1 font-semibold">Select Requested Players</label>
                             <div className="max-h-40 overflow-y-auto border rounded p-2 space-y-1">

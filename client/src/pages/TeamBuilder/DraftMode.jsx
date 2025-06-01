@@ -4,8 +4,6 @@ import { jwtDecode } from "jwt-decode";
 import EyeIcon from "../../icons/EyeIcon";
 import EyeCloseIcon from "../../icons/EyeCloseIcon";
 
-// ... imports remain the same
-
 function DraftMode() {
   const [teams, setTeams] = useState([]);
   const [showJoinForm, setShowJoinForm] = useState(false);

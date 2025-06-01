@@ -14,6 +14,7 @@ import RedirectIfAuthenticated from "./components/RedirectIfAuthenticated";
 import BudgetMode from "./pages/TeamBuilder/BudgetMode";
 import GamesPage from "./pages/GamesPage";
 import QuestionPage from "./pages/QuestionsPage";
+import RulesPage from "./pages/RulesPage";
 
 function AppLayout() {
   const location = useLocation();
@@ -52,6 +53,7 @@ function AppLayout() {
             <Route path="/league/:leagueId/teams" element={<LeagueTeamsPage />} />
             <Route path="/games" element={<GamesPage />} />
             <Route path="/questions" element={<QuestionPage/>} />
+            <Route path="/rules" element={<RulesPage/>} />
           </Routes>
         </main>
       </div>

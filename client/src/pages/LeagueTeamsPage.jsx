@@ -691,7 +691,7 @@ function LeagueTeamsPage() {
                         if (!res.ok) throw new Error(await res.text());
 
                         alert("Player swapped successfully!");
-                        window.location.reload(); // or re-fetch the team players instead of reload
+                        window.location.reload();
                       } catch (err) {
                         console.error("Failed to swap players:", err.message);
                         alert(err.message);
